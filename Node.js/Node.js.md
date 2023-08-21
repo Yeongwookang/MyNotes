@@ -58,12 +58,12 @@ Back-end 개발에서 Javascript 문법을 사용하여 비동기 프로그래�
 ### 설치
 
 #### Node.js  설치
-https://nodejs.org/ko LTS를 설치했다.
-폴더를 영어로만 이루어진 경로로 만들어 npm init
+        https://nodejs.org/ko LTS를 설치했다.
+        폴더를 영어로만 이루어진 경로로 만들어 npm init
 
 #### npm express
-공식 문서: https://www.npmjs.com/package/express?activeTab=readme
-설치는 터미널에서 npm i express 입력
+        공식 문서: https://www.npmjs.com/package/express?activeTab=readme
+        설치는 터미널에서 npm i express 입력
 
 이후 cd 등으로 경로를 지정하고 node 파일명 으로 서버를 간단하게 켤 수 있다.
 
