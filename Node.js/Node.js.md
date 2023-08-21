@@ -55,6 +55,8 @@ Back-end 개발에서 Javascript 문법을 사용하여 비동기 프로그래�
 
 <br>
 
+### 설치
+
 #### Node.js  설치
 https://nodejs.org/ko LTS를 설치했다.
 폴더를 영어로만 이루어진 경로로 만들어 npm init
