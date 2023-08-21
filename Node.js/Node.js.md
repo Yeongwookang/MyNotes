@@ -67,6 +67,9 @@ Back-end 개발에서 Javascript 문법을 사용하여 비동기 프로그래�
 
 이후 cd 등으로 경로를 지정하고 node 파일명 으로 서버를 간단하게 켤 수 있다.
 
+<br>
+<br>
+
 ## 생각들..
 
 #### Node.js 는 java/spring을 대체할까?
