@@ -14,5 +14,18 @@ Selenium 4.11.2 버전을 import 하여 채용사이트인 indeed를 scrapping �
 
     replit으로 할때는 beautifulsoup를 이용해서 하다가 Selenium의 메소드들을 새로 알아야 했습니다.
     https://www.selenium.dev/documentation/ 공식문서를 참조하면서 해결했습니다.
+
+#### selenium.common.exceptions.NoSuchElementException 
+
+    한번에 검색하는 갯수가 적게 설정하면 문제가 없었지만, 갯수를 늘리니 NoSuchElementException이 나왔습니다.
+    처음에는 코드가 잘못된줄 알고 for문에 index도 해본 결과, indeed사이트는 mosaic-afterFifthJobResult 처럼
+    5단위로 공백을 보내고 있었습니다.
+
+#### 해결
+
+    if card.get_attribute('innerText').replace(" ","") != "":
+    을 통해 공백을 잘라냈을때 공백이 아니라면이라는 조건을 걸어 완벽하게 해결되었습니다.
+    
+
     
     
