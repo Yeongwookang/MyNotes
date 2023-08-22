@@ -5,6 +5,8 @@
     [] 와 , 로 정의한다.
     daysOfWeek = [ "월", "화", "수", "목", "금" ]
     daysOfWeek.append("토")
+    특정요소 뒤에 배치
+    daysOfWeek.insert(daysOfWeek.index("금")+1,"토")
     
 ### Tuples
     () 와 , 로 정의한다.
