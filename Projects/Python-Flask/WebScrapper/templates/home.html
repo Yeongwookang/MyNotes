@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Scrapper</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="card p-3">
+            <h1 class="mb-3 ">Indeed Scrapper</h1>
+            <form action="/search">
+                <div class="mb-3">
+                <label for="keyword">검색어를 입력해주세요.</label>
+                <input class="form-control mt-2" type="text" id="keyword" name="keyword" placeholder="여기에 입력해주세요">
+                </div>
+                <div class="mb-3">
+                <label for="limit">한 번에 검색할 갯수를 입력해주세요.</label>
+                <input class="form-control mt-2" type="text" id="limit" name="limit" placeholder="여기에 입력해주세요">
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-outline-black" type="submit">검색</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
