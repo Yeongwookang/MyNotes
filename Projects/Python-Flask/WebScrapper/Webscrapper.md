@@ -3,8 +3,7 @@ Selenium 4.11.2 버전을 import 하여 채용사이트인 indeed를 scrapping �
 
 #### 개발 환경 세팅
 
-    처음에는 replit으로 개발을 진행했는데, replit은 파이썬 3.10을 사용하고 패키지 설치 및 설정이 힘들어서,
-    VSCode로 개발을 진행했다.
+    처음에는 replit으로 개발을 진행했는데, replit은 파이썬 3.10을 사용하고 패키지 설치 및 설정이 힘들어서, VSCode로 개발을 진행했다.
     Chrome driver는 매번 맞춰서 파일을 넣기가 어려울것 같아서 크롬을 최신업데이트 하고 
     pypi에 있는 webdriver-manager 모듈을 활용하여 자동 최신화하게 했다.
 
@@ -32,9 +31,8 @@ indeed의 경우 그렇지 않았지만, 결과 화면에 데이터가 비는 �
 
 #### selenium.common.exceptions.NoSuchElementException 
 
-    한번에 검색하는 갯수가 적게 설정하면 문제가 없었지만, 갯수를 늘리니 NoSuchElementException이 나왔습니다.
-    처음에는 코드가 잘못된줄 알고 for문에 index도 해본 결과, indeed사이트는 mosaic-afterFifthJobResult 처럼
-    5단위로 공백을 보내고 있었다.
+    한번에 검색하는 갯수가 적게 설정하면 문제가 없었지만, 갯수를 늘리니 NoSuchElementException이 나왔다.
+    처음에는 코드가 잘못된줄 알고 for문에 index도 해본 결과, indeed사이트는 mosaic-afterFifthJobResult 처럼 5단위로 공백을 보내고 있었다.
 
 #### 해결
 
