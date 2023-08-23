@@ -19,8 +19,6 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
 
 처음 5개 페이지에 대해 스크랩해서 Excel 파일로 만들어주는 Scrapper를 만들었다.
 
-### Scrapper
-
 <details> 
 <summary>Scrapper 코드</summary>
     
@@ -92,6 +90,7 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
         return results
 
 </details>
+<br>
 
 ### 데이터 가공
 
@@ -116,6 +115,7 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
     indeed가 아닌 다른 사이트에서는 검색 쿼리로 limit를 제공하지 않을수도 있는데,
     이를 어떻게 해결해야할지 생각을 해봐야겠다.
 
+<br>
 
 ### csv파일로 만들기
 
