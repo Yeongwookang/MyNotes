@@ -26,6 +26,8 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
     from selenium.webdriver.chrome.service import Service as ChromeService
     from webdriver_manager.chrome import ChromeDriverManager
     from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
     
     def get_page_count(keyword):
         chrome_options = webdriver.ChromeOptions()
@@ -55,7 +57,7 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
             driver.quit()
             return count
     
-    def extract_indeed_jobs(keyword, limit):
+    def extract_indeed_jobs(keyword, limit=10):
         chrome_options = webdriver.ChromeOptions()
     
         # 브라우저 꺼짐 방지 옵션
@@ -70,24 +72,25 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
         
         for page in range(pages):
             request_url= f"{base_url}?q={keyword}&limit={limit}&start={page*limit}"
-            print(f"현재 {request_url} 에 대해 처리중입니다.")
             driver.get(request_url)
-            cards = driver.find_elements(By.XPATH, '//*[@id="mosaic-provider-jobcards"]/ul/li')
+            
+            wait = WebDriverWait(driver, 10)
+            cards = wait.until(EC.presence_of_all_elements_located((By.XPATH, '//*[@id="mosaic-provider-jobcards"]/ul/li')))
             for card in cards:
                 if card.get_attribute('innerText').replace(" ","") != "":
+                    jobTitle = card.find_element(By.CLASS_NAME, 'jobTitle')
                     job_data = {
-                    'position' : card.find_element(By.CLASS_NAME,'jobTitle').text.replace(","," "),
+                    'position' : jobTitle.find_element(By.TAG_NAME, 'span').text.replace(","," "),
                     'company': card.find_element(By.CLASS_NAME,'companyName').text.replace(","," "),
                     'location': card.find_element(By.CLASS_NAME,'companyLocation').text.replace(","," "),
                     'description' : card.find_element(By.CLASS_NAME,'job-snippet').text.replace(","," "),
-                    'postDate':card.find_element(By.CLASS_NAME,'date').text.replace(","," ").replace("\n"," "),
+                    'postDate':card.find_element(By.CLASS_NAME,'date').text.replace(","," ").replace("Posted\n",""),
                     'link': card.find_element(By.TAG_NAME,'a').get_attribute('href').replace(","," ")
                     }
                     results.append(job_data)   
-                    
-        print(f"검색결과: {len(results)}개가 존재합니다")    
         driver.quit()
         return results
+
 
 </details>
 <br>
@@ -118,27 +121,83 @@ Selenium을 활용하여 키워드와 한번에 검색할 양을 정하면
 <br>
 
 ### csv파일로 만들기
+csv 파일로 만들어주는 코드이다. 파이썬 기본 라이브러리의 파일 함수를 사용하였다.
+
+utf-8로만 인코딩하면 엑셀등에서 켰을때 글자가 깨져서 utf-8 sig로 인코딩 하였다.
 
 <details> 
 <summary>csv파일로 만들기 코드</summary>
  
     from indeed_extractor import extract_indeed_jobs
-
-    def job_to_save_csv():
-        keyword = input("검색어는 무엇인가요? ")
-        limit = input("한 번에 몇개를 검색할까요? ")
     
-        jobs = extract_indeed_jobs(keyword, int(limit))
-    
-        file = open(f"{keyword}.csv","w", encoding="utf-8 sig")
+    def job_to_csv(file_name, jobs):
+        file = open(f"{file_name}.csv","w", encoding="utf-8 sig")
     
         file.write("직무, 사명, 위치, 상세, 게시일, 링크 \n")
         for job in jobs:
             file.write(f"{job['position']}, {job['company']}, {job['location']}, {job['description']}, {job['postDate']}, {job['link']}\n")
     
         file.close()
-        print(f"{keyword}.csv 파일이 생성되었습니다.")
+        print(f"{file_name}.csv 파일이 생성되었습니다.")
 </details>
 
-#### pandas로 하는게..
-    전에 DASH 프로젝트를 할때 pandas를 활용하여 가공해본일이 있는데, 이번 데이터도 pandas로 처리를 해봐야겠다.
+<br>
+
+### Flask 
+
+keyword와 limit을 쿼리로 하는 페이지를 구현하였다. export 할때 다시 검색하여 하지 않도록 db={} 를 활용하여 임시저장한 뒤
+파일로 만들어 다운로드 가능하도록 하였다.
+Flask는 부트캠프에서는 간단하게만 해보았는데, 파일처리 등이 스프링보다는 편한 것 같다.
+
+<details> 
+<summary>main 코드</summary>
+    
+    from flask import Flask, render_template, request, redirect, send_file
+    from indeed_extractor import extract_indeed_jobs
+    from job_to_save_csv import job_to_csv
+    
+    app = Flask("JobScrapper")
+    
+    db = {}
+    
+    @app.route("/")
+    def home():
+        return render_template("home.html")
+    
+    @app.route("/search")
+    def search():
+        keyword = request.args.get("keyword")
+        limit = request.args.get("limit")
+        
+        # 검색어 없으면 홈으로
+        if keyword == None or limit == None:    
+            return redirect("/")
+        
+        limit = int(limit)
+        file_name = f"{keyword}_{limit}"
+        
+        if file_name in db:
+            jobs = db[file_name]
+        
+        else: 
+            jobs = extract_indeed_jobs(keyword, limit)
+            db[file_name] = jobs
+        return render_template("search.html", keyword = keyword, limit = limit, jobs = jobs)
+    
+    @app.route("/export")
+    def export():
+        keyword = request.args.get("keyword")
+        limit = request.args.get("limit")
+        limit = int(limit)
+        
+        file_name = f"{keyword}_{limit}"
+        
+        if keyword == None or file_name not in db:    
+            return redirect("/")
+        
+        else:
+            job_to_csv(file_name, db[file_name])
+            return send_file(f"{file_name}.csv", as_attachment=True)
+    
+    app.run("localhost")
+</details>
